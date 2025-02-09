@@ -3,7 +3,7 @@ const cardTemplate = document.querySelector('#card-template').content;
 // @todo: DOM узлы
 const cardPlace = document.querySelector('.places__list');
 // @todo: Функция создания карточки
-function createCard(contentCard) {
+function createCard(contentCard, deliteCard) {
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
     const cardDeliteButton = cardElement.querySelector('.card__delete-button');
     cardElement.querySelector('.card__image').src = contentCard.link;
@@ -11,7 +11,9 @@ function createCard(contentCard) {
     cardElement.querySelector('.card__title').textContent = contentCard.name;
     cardDeliteButton.addEventListener('click', deliteCard);
     return cardElement;
+    
 }
+
 // @todo: Функция удаления карточки
     function deliteCard(el) {
         const cardElement = el.target.closest('.card');
@@ -19,8 +21,8 @@ function createCard(contentCard) {
     }
 // @todo: Вывести карточки на страницу
 function displayCard(initialCards) {
-    initialCards.forEach(cards => {
-        const card = createCard(cards);
+    initialCards.forEach((contentCard) => {
+        const card = createCard(contentCard, deliteCard);
         cardPlace.append(card);
     });
 }
