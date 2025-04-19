@@ -2,10 +2,10 @@
 import { initialCards } from "./components/cards.js";
 import "./pages/index.css";
 import { openPopup, closePopup, handleEscapeKey, handleOverlayAndCloseButtonClick } from "./components/modal.js";
-import { createCard, likeCard, deleteCard } from "./components/cards.js";
+import { createCard, likeCard, deleteCard } from "./components/card.js";
 
-export const cardTemplate = document.querySelector("#card-template"); // темплейт
-export const cardPlace = document.querySelector(".places__list"); // блок куда вставим карточки
+const cardTemplate = document.querySelector("#card-template"); // темплейт
+const cardPlace = document.querySelector(".places__list"); // блок куда вставим карточки
 
 // вывод на страницу
 initialCards.forEach((contentCard) => {
@@ -14,19 +14,19 @@ initialCards.forEach((contentCard) => {
 });
 
 // редактирование профиля
-export const editButton = document.querySelector(".profile__edit-button"); // элемент кнопки
-export const popupEdit = document.querySelector(".popup_type_edit"); // попап профиля
-export const formEdit = document.forms["edit-profile"];
-export const profileTitle = document.querySelector(".profile__title");
-export const profileDescription = document.querySelector(".profile__description");
+const editButton = document.querySelector(".profile__edit-button"); // элемент кнопки
+const popupEdit = document.querySelector(".popup_type_edit"); // попап профиля
+const formEdit = document.forms["edit-profile"];
+const profileTitle = document.querySelector(".profile__title");
+const profileDescription = document.querySelector(".profile__description");
 
 //создание карточки
-export const addButton = document.querySelector(".profile__add-button"); // кнопка
-export const popupNewCard = document.querySelector(".popup_type_new-card"); // попап создания
-export const formNewCard = document.forms["new-place"];
+const addButton = document.querySelector(".profile__add-button"); // кнопка
+const popupNewCard = document.querySelector(".popup_type_new-card"); // попап создания
+const formNewCard = document.forms["new-place"];
 
 //картинка
-export const popupImage = document.querySelector(".popup_type_image"); // попап картинки
+const popupImage = document.querySelector(".popup_type_image"); // попап картинки
 
 editButton.addEventListener("click", () => {
     formEdit.name.value = profileTitle.textContent;
@@ -40,7 +40,7 @@ addButton.addEventListener("click", () => {
 });
 
 // форма профиля
-export function handleProfileFormSubmit(event) {
+function handleProfileFormSubmit(event) {
     event.preventDefault();
 
     profileTitle.textContent = formEdit.name.value;
@@ -53,7 +53,7 @@ export function handleProfileFormSubmit(event) {
 formEdit.addEventListener("submit", handleProfileFormSubmit);
 
 // форма новой карточки
-export function handleNewCardFormSubmit(event) {
+function handleNewCardFormSubmit(event) {
     event.preventDefault();
 
     const newCardData = {
@@ -61,23 +61,22 @@ export function handleNewCardFormSubmit(event) {
         link: formNewCard.link.value,
     };
 
-    const cardElement = createCard(newCardData, deleteCard);
+    const cardElement = createCard(newCardData, deleteCard, likeCard, handleImageClick);
     cardPlace.prepend(cardElement);
-
     closePopup(popupNewCard);
 }
 
 // слушатель сабмита для новой карточки
 formNewCard.addEventListener("submit", handleNewCardFormSubmit);
 //картинка в попапе
-export const imageInPopup = popupImage.querySelector(".popup__image");
+const imageInPopup = popupImage.querySelector(".popup__image");
 //описание картинки
-export const captionInPopup = popupImage.querySelector(".popup__caption");
+const captionInPopup = popupImage.querySelector(".popup__caption");
 
-export function handleImageClick(CardData) {
-    imageInPopup.src = CardData.link;
-    imageInPopup.alt = CardData.name;
-    captionInPopup.textContent = CardData.name;
+function handleImageClick(сardData) {
+    imageInPopup.src = сardData.link;
+    imageInPopup.alt = сardData.name;
+    captionInPopup.textContent = сardData.name;
     openPopup(popupImage);
 }
 
