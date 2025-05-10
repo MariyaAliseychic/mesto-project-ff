@@ -6,7 +6,7 @@ import {
   handleEscapeKey,
   handleOverlayAndCloseButtonClick,
 } from "./components/modal.js";
-import { createCard, likeCard, deleteCard} from "./components/card.js";
+import { createCard, likeCard, deleteCard } from "./components/card.js";
 import {
   enableValidation,
   clearValidation,
@@ -18,7 +18,7 @@ import {
   deleteMyCard,
   setProfile,
   setAvatar,
-  postNewCard
+  postNewCard,
 } from "./components/api.js";
 
 const cardTemplate = document.querySelector("#card-template"); // темплейт
@@ -56,30 +56,31 @@ function renderLoading(isLoading, form) {
   } else {
     buttonTextPopup.textContent = "Сохранение...";
   }
-};
+}
 
 // Попап аватара
 
 profileImage.addEventListener("click", () => {
   openPopup(pupupAvatar);
   clearValidation(formAvatar, configValidation); // очистка ошибок
-  InputAvatar.value = '';
 });
 
 popupButtonCloseAvatar.addEventListener("click", () => {
-    openPopup(formAvatar)
+  openPopup(formAvatar);
 });
+formAvatar.addEventListener("submit", handleFormSubmitAvatar);
 
 function handleFormSubmitAvatar(evt) {
   evt.preventDefault();
   renderLoading(false, pupupAvatar);
   setAvatar(InputAvatar.value)
-    .then((result) => {
-      profileImage.style.backgroundImage = `url(${result.avatar})`;
+    .then((InputAvatar) => {
+      profileImage.style = `background-image: url('${link}')`;
       closePopup(pupupAvatar);
+      formAvatar.reset();
     })
     .catch((error) => {
-        console.error(error)
+      console.error(error);
     })
     .finally(() => renderLoading(true, pupupAvatar));
 }
@@ -92,7 +93,7 @@ editButton.addEventListener("click", () => {
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
   openPopup(popupEdit);
-  //clearValidation(formEdit, configValidation);
+  clearValidation(formEdit, configValidation);
 });
 
 // форма профиля
@@ -108,10 +109,9 @@ function handleProfileFormSubmit(event) {
       closePopup(popupEdit);
     })
     .catch((error) => {
-        console.log(error);
+      console.log(error);
     })
     .finally(() => renderLoading(true, popupEdit));
-    
 }
 
 // слушатель формы профиля
@@ -128,24 +128,30 @@ addButton.addEventListener("click", () => {
 // форма новой карточки
 function handleNewCardFormSubmit(event) {
   event.preventDefault();
-  renderLoading(false, popupNewCard)
+  renderLoading(false, popupNewCard);
   const newCardData = {
     name: formNewCard["place-name"].value,
     link: formNewCard.link.value,
-  }
+  };
   postNewCard(newCardData.name, newCardData.link)
-  .then((newCards) => {
-    const userId = newCards.owner._id;
-        const newCard = createCard(newCards,userId, deleteCard, likeCard, handleImageClick);
+    .then((newCards) => {
+      const userId = newCards.owner._id;
+      const newCard = createCard(
+        newCards,
+        userId,
+        deleteCard,
+        likeCard,
+        handleImageClick
+      );
       cardPlace.prepend(newCard);
       closePopup(popupNewCard);
-  })
-  .catch((error) => {
-    console.log(error);
-  })
-  .finally(() => {
-    renderLoading(true, popupEdit)
-  })
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+    .finally(() => {
+      renderLoading(true, popupEdit);
+    });
 }
 
 // слушатель сабмита для новой карточки
@@ -166,16 +172,18 @@ Promise.all([getCards(), getProfile()])
   .then(([cards, profile]) => {
     profileTitle.textContent = profile.name;
     profileDescription.textContent = profile.about;
-    profileImage.style.backgroundImage = profile.avatar;
+    profileImage.style.backgroundImage = `url('${profile.avatar}')`;
     const profileIdMe = profile._id;
     cards.forEach((cardData) => {
-      const card = createCard(
-        cardData, { deleteCard,
-            likeCard,
-            handleImageClick,
-            deleteMyCard,
-            profileIdMe});
-      cardPlace.append(card);})
-    })
+      const card = createCard(cardData, {
+        deleteCard,
+        likeCard,
+        handleImageClick,
+        deleteMyCard,
+        profileIdMe,
+      });
+      cardPlace.append(card);
+    });
+    console.log("profile".Avatar);
+  })
   .catch((err) => console.log("Ошибка при получении профиля:", err));
-

@@ -17,82 +17,71 @@ function checkResponse(res) {
 //запрос данных профиля
 export const getProfile = () => {
   return fetch(`${config.baseUrl}/users/me`, {
-    headers: config.headers
-  })
-  .then(checkResponse)
+    headers: config.headers,
+  }).then(checkResponse);
 };
 
 //запрос данных карточек
 export const getCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
-    headers: config.headers
-  })
-    .then(checkResponse)
+    headers: config.headers,
+  }).then(checkResponse);
 };
 
 //отправка данных профиля
 export const setProfile = (name, about) => {
   return fetch(`${config.baseUrl}/users/me`, {
-    method: 'PATCH',
+    method: "PATCH",
     headers: config.headers,
     body: JSON.stringify({
       name: name,
       about: about,
     }),
-  })
-    .then(checkResponse)
+  }).then(checkResponse);
 };
 
 //добавление новой карточки
 export const postNewCard = (name, link) => {
   return fetch(`${config.baseUrl}/cards`, {
-    method: 'POST',
+    method: "POST",
     headers: config.headers,
     body: JSON.stringify({
       name: name,
       link: link,
     }),
-})
-    .then(checkResponse)
+  }).then(checkResponse);
 };
 
 // Удаление карточки
 export const deleteMyCard = (cardId) => {
   return fetch(`${config.baseUrl}/cards/${cardId}`, {
-    method: 'DELETE',
+    method: "DELETE",
     headers: config.headers,
-  })
-    .then(checkResponse)
+  }).then(checkResponse);
 };
 
-// Отправка  лайка 
+// Отправка  лайка
 export const putLike = (cardId) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
-    method: 'PUT',
-    headers: config.headers
-  })
-  .then(checkResponse)
+    method: "PUT",
+    headers: config.headers,
+  }).then(checkResponse);
 };
 
 export const delLike = (cardId) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
-    method: 'DELETE',
-    headers: config.headers
-  })
-  .then(checkResponse)
-}
+    method: "DELETE",
+    headers: config.headers,
+  }).then(checkResponse);
+};
 
-// Замена аватарки  
-export const setAvatar = (urlAvatar) => {
+// Замена аватарки
+export const setAvatar = (avatar) => {
   return fetch(`${config.baseUrl}/users/me/avatar`, {
-    method: 'PATCH',
+    method: "PATCH",
     headers: config.headers,
     body: JSON.stringify({
-    avatar: urlAvatar
-  })
-})
-    .then(checkResponse)
-}
-
-
-
+      avatar: avatar,
+    }),
+  }).then(checkResponse);
+};

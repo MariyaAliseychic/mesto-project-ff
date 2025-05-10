@@ -40,6 +40,7 @@
   background-image: url('../../../images/edit-icon.svg');
   opacity: 80%;
   background-repeat: no-repeat;
+  background-size: 26px;
 }
 
 .profile__image:hover::after {
