@@ -7,11 +7,7 @@ import {
   handleOverlayAndCloseButtonClick,
 } from "./components/modal.js";
 import { createCard, likeCard, deleteCard } from "./components/card.js";
-import {
-  enableValidation,
-  clearValidation,
-  configValidation,
-} from "./components/validation.js";
+import { enableValidation, clearValidation } from "./components/validation.js";
 import {
   getCards,
   getProfile,
@@ -20,6 +16,16 @@ import {
   setAvatar,
   postNewCard,
 } from "./components/api.js";
+
+const configValidation = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error_visible",
+};
+let profileIdMe;
 
 const cardTemplate = document.querySelector("#card-template"); // темплейт
 const cardPlace = document.querySelector(".places__list"); // блок куда вставим карточки
@@ -45,7 +51,7 @@ const captionInPopup = popupImage.querySelector(".popup__caption");
 //аватар
 const pupupAvatar = document.querySelector(".popup_avatar");
 const profileImage = document.querySelector(".profile__image");
-const InputAvatar = pupupAvatar.querySelector(".popup__input_type_url");
+const inputAvatar = pupupAvatar.querySelector(".popup__input_type_url");
 const popupButtonCloseAvatar = pupupAvatar.querySelector(".popup__close");
 const formAvatar = document.forms["new-avatar"];
 
@@ -73,9 +79,9 @@ formAvatar.addEventListener("submit", handleFormSubmitAvatar);
 function handleFormSubmitAvatar(evt) {
   evt.preventDefault();
   renderLoading(false, pupupAvatar);
-  setAvatar(InputAvatar.value)
-    .then((InputAvatar) => {
-      profileImage.style = `background-image: url('${link}')`;
+  setAvatar(inputAvatar.value)
+    .then(() => {
+      profileImage.style = `background-image: url('${inputAvatar.value}')`;
       closePopup(pupupAvatar);
       formAvatar.reset();
     })
@@ -102,16 +108,15 @@ function handleProfileFormSubmit(event) {
   event.preventDefault();
   renderLoading(false, popupEdit);
   setProfile(nameInput.value, jobInput.value)
-    .then(() => {
-      profileTitle.textContent = nameInput.value;
-      profileDescription.textContent = jobInput.value;
-      formEdit.reset();
+    .then((data) => {
+      profileTitle.textContent = data.name;
+      profileDescription.textContent = data.about;
+      //formEdit.reset();
       closePopup(popupEdit);
     })
     .catch((error) => {
       console.log(error);
-    })
-    .finally(() => renderLoading(true, popupEdit));
+    });
 }
 
 // слушатель формы профиля
@@ -136,13 +141,16 @@ function handleNewCardFormSubmit(event) {
   postNewCard(newCardData.name, newCardData.link)
     .then((newCards) => {
       const userId = newCards.owner._id;
-      const newCard = createCard(
-        newCards,
-        userId,
+      const newCard = createCard(newCards, {
         deleteCard,
         likeCard,
-        handleImageClick
-      );
+        handleImageClick,
+        deleteMyCard,
+        profileIdMe,
+        userId,
+      });
+
+      formNewCard.reset();
       cardPlace.prepend(newCard);
       closePopup(popupNewCard);
     })
@@ -173,7 +181,7 @@ Promise.all([getCards(), getProfile()])
     profileTitle.textContent = profile.name;
     profileDescription.textContent = profile.about;
     profileImage.style.backgroundImage = `url('${profile.avatar}')`;
-    const profileIdMe = profile._id;
+    profileIdMe = profile._id;
     cards.forEach((cardData) => {
       const card = createCard(cardData, {
         deleteCard,
@@ -183,6 +191,7 @@ Promise.all([getCards(), getProfile()])
         profileIdMe,
       });
       cardPlace.append(card);
+      profileIdMe;
     });
     console.log("profile".Avatar);
   })

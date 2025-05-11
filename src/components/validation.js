@@ -1,11 +1,4 @@
-export const configValidation = {
-  formSelector: '.popup__form',
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_disabled',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__error_visible'
-}; 
+
 //показать ошибку
 const showInputError = (formElement, inputElement, errorMessage, configValidation) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
@@ -70,7 +63,6 @@ export const enableValidation = (configValidation) => {
   const formList = Array.from(document.querySelectorAll(configValidation.formSelector));
   formList.forEach((formElement) => {
       formElement.addEventListener('sumbit', function (evt) {
-          evt.preventDefault();
       });
       setEventListeners(formElement, configValidation);
   })
@@ -83,7 +75,6 @@ export const clearValidation = (formElement, configValidation) => {
   
   inputList.forEach((inputElement) => {
       hideInputError(formElement, inputElement, configValidation);
-      inputElement.value = '';
   });
 
   toggleButtonState(inputList, buttonElement, configValidation);
