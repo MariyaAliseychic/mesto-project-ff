@@ -5,7 +5,7 @@ const cardTemplate = document.querySelector("#card-template"); // темплей
 
 export const createCard = (
   cardData,
-  { deleteCard, likeCard, handleImageClick, profileIdMe, userId } = {}
+  { deleteCard, likeCard, handleImageClick, profileIdMe } = {}
 ) => {
   const cardElement = cardTemplate.content
     .querySelector(".card")
@@ -32,23 +32,16 @@ export const createCard = (
 
   // Добавление обработчика для кнопки «лайк»
   cardLikeButton.addEventListener("click", () => {
-    likeCard(cardLikeButton, cardData._id, likesCountur);
+    likeCard(cardLikeButton, cardData, likesCountur);
   });
-
-  //if (cardData.likes.some(like => like._id === userId)) {
-  //cardLikeButton.classList.add("card__like-button_is-active");
-  //} else {
-  //cardLikeButton.classList.remove("card__like-button_is-active");
-  //}
+  
   if (
-    cardData.likes.some((like) => {
-      return like._id === userId;
-    })
-  ) {
+    cardData.likes.some((like) => like._id === profileIdMe)) {
     cardLikeButton.classList.add("card__like-button_is-active");
   } else {
     cardLikeButton.classList.remove("card__like-button_is-active");
   }
+  
 
   if (cardData.owner._id !== profileIdMe) {
     cardDeleteButton.style.display = "none";
@@ -60,19 +53,21 @@ export const createCard = (
 };
 
 //лайк
-export function likeCard(cardLikeButton, cardId, likesCountur) {
+export function likeCard(cardLikeButton, cardData, likesCountur) {
   if (cardLikeButton.classList.contains("card__like-button_is-active")) {
-    delLike(cardId)
+    delLike(cardData._id)
       .then((updatedCard) => {
         cardLikeButton.classList.remove("card__like-button_is-active");
-        likesCountur.textContent = updatedCard.likes.length;
+        cardData.likes = updatedCard.likes;
+        likesCountur.textContent = cardData.likes.length;
       })
       .catch((err) => console.log("Ошибка при снятии лайка:", err));
   } else {
-    putLike(cardId)
+    putLike(cardData._id)
       .then((updatedCard) => {
         cardLikeButton.classList.add("card__like-button_is-active");
-        likesCountur.textContent = updatedCard.likes.length;
+        cardData.likes = updatedCard.likes;
+        likesCountur.textContent = cardData.likes.length;
       })
       .catch((err) => console.log("Ошибка при добавлении лайка:", err));
   }

@@ -26,6 +26,7 @@ const configValidation = {
   errorClass: "popup__error_visible",
 };
 let profileIdMe;
+let userId;
 
 const cardTemplate = document.querySelector("#card-template"); // темплейт
 const cardPlace = document.querySelector(".places__list"); // блок куда вставим карточки
@@ -140,14 +141,14 @@ function handleNewCardFormSubmit(event) {
   };
   postNewCard(newCardData.name, newCardData.link)
     .then((newCards) => {
-      const userId = newCards.owner._id;
+      //userId = newCards.owner._id;
       const newCard = createCard(newCards, {
         deleteCard,
         likeCard,
         handleImageClick,
         deleteMyCard,
-        profileIdMe,
-        userId,
+        profileIdMe
+        //userId,
       });
 
       formNewCard.reset();
@@ -158,7 +159,7 @@ function handleNewCardFormSubmit(event) {
       console.log(error);
     })
     .finally(() => {
-      renderLoading(true, popupEdit);
+      renderLoading(true, popupNewCard);
     });
 }
 
@@ -193,6 +194,5 @@ Promise.all([getCards(), getProfile()])
       cardPlace.append(card);
       profileIdMe;
     });
-    console.log("profile".Avatar);
   })
   .catch((err) => console.log("Ошибка при получении профиля:", err));

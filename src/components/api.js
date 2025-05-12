@@ -75,6 +75,8 @@ export const delLike = (cardId) => {
   }).then(checkResponse);
 };
 
+
+
 // Замена аватарки
 export const setAvatar = (avatar) => {
   return fetch(`${config.baseUrl}/users/me/avatar`, {
